@@ -1,0 +1,84 @@
+<odoo>
+
+    <!-- Vue Formulaire -->
+    <record id="view_absence_form" model="ir.ui.view">
+        <field name="name">gestion.absence.form</field>
+        <field name="model">gestion.absence</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="absent,justifie"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Informations de l'étudiant">
+                            <field name="student_name"/>
+                            <field name="date_absence"/>
+                        </group>
+                        <group string="Statut">
+                            <field name="justified"/>
+                        </group>
+                    </group>
+                    <group string="Détails de l'absence">
+                        <field name="reason" placeholder="Décrivez le motif de l'absence..."/>
+                    </group>
+                    <group string="Justification">
+                        <field name="justification" placeholder="Ajoutez des détails sur la justification..."/>
+                        <field name="attachment" filename="attachment_name"/>
+                        <field name="attachment_name" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue Liste -->
+    <record id="view_absence_tree" model="ir.ui.view">
+        <field name="name">gestion.absence.tree</field>
+        <field name="model">gestion.absence</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state == 'justifie'" decoration-warning="state == 'absent'">
+                <field name="student_name"/>
+                <field name="date_absence"/>
+                <field name="reason"/>
+                <field name="state"/>
+                <field name="justified"/>
+                <field name="attachment" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue Recherche -->
+    <record id="view_absence_search" model="ir.ui.view">
+        <field name="name">gestion.absence.search</field>
+        <field name="model">gestion.absence</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="student_name" string="Nom de l'étudiant"/>
+                <filter string="Justifié" name="justified" domain="[('state', '=', 'justifie')]"/>
+                <filter string="Absent" name="absent" domain="[('state', '=', 'absent')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="État" name="group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_absence" model="ir.actions.act_window">
+        <field name="name">Absences</field>
+        <field name="res_model">gestion.absence</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_absence_root" 
+              name="Gestion des absences" 
+              sequence="10"/>
+    <menuitem id="menu_absence"
+              name="Absences et Justifications"
+              parent="menu_absence_root"
+              action="action_absence"
+              sequence="10"/>
+
+</odoo>
